@@ -1,0 +1,89 @@
+# NAME
+
+Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email that uses the Email::Sender::Simple module
+
+# SYNOPSIS
+
+  ###
+  ### simple usage
+  ###
+  use Log::Dispatch;
+  my $log =
+      Log::Dispatch->new
+          ( outputs =>
+                [ [ 'Email::EmailSender',
+                    min_level     => 'emerg',
+                    from          => 'logger@example.com',
+                    to            => [ qw( foo@example.com bar@example.org ) ],
+                    subject       => 'Big error!',
+                    header_encode => 'MIME-Header-ISO_2022_JP',
+                    body_encode   => 'iso-2022-jp' ]
+                ],
+          );
+  $log->emerg("Something bad is happening");
+
+  ###
+  ### Sending a message with Email::Sender::Transport::SMTP
+  ### Does not support ssl option.
+  ###
+  use Log::Dispatch;
+  my $log =
+      Log::Dispatch->new
+          ( outputs =>
+                [ [ 'Email::EmailSender',
+                    min_level     => 'emerg',
+                    from          => 'logger@example.com',
+                    to            => [ qw( foo@example.com bar@example.org ) ],
+                    subject       => 'Big error!',
+                    header_encode => 'MIME-Header-ISO_2022_JP',
+                    body_encode   => 'iso-2022-jp',
+                    use_transport => 1,
+                    host          => [your smtp host],
+                    port          => [your smtp port number] ]
+                ],
+          );
+  $log->emerg("Something bad is happening");
+
+# DESCRIPTION
+
+This is a subclass of [Log::Dispatch::Email](http://search.cpan.org/perldoc?Log::Dispatch::Email) that implements the
+send_email method using the [Email::Sender::Simple](http://search.cpan.org/perldoc?Email::Sender::Simple) module.
+
+# DESCRIPTION(ja)
+
+デフォルトで日本語の件名と本文を ISO_2022_JP にエンコーディングしてくれます。
+他のモジュールのように文字化けが起こりません。
+
+# DEPENDENCIES
+
+- [Log::Dispatch::Email](http://search.cpan.org/perldoc?Log::Dispatch::Email)
+
+- [Encode](http://search.cpan.org/perldoc?Encode)
+
+- [Email::MIME](http://search.cpan.org/perldoc?Email::MIME)
+
+- [Email::Sender::Simple](http://search.cpan.org/perldoc?Email::Sender::Simple)
+
+- [Email::Sender::Transport::SMTP](http://search.cpan.org/perldoc?Email::Sender::Transport::SMTP)
+
+
+
+# BUGS AND LIMITATIONS
+
+Does not support SSL on Email::Sender::Transport::SMTP.
+
+I don't understand why it doesn't work.
+
+# AUTHOR
+
+keroyonn <keroyonn@cpan.org>
+
+# SEE ALSO
+
+Log::Dispatch
+Log::Dispatch::Email::MailSender
+
+# LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.

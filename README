@@ -1,27 +1,74 @@
-This is Perl module Log::Dispatch::Email::EmailSender.
+NAME
+    Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email
+    that uses the Email::Sender::Simple module
 
-INSTALLATION
+SYNOPSIS
+      ###
+      ### simple usage
+      ###
+      use Log::Dispatch;
+      my $log =
+          Log::Dispatch->new
+              ( outputs =>
+                    [ [ 'Email::EmailSender',
+                        min_level     => 'emerg',
+                        from          => 'logger@example.com',
+                        to            => [ qw( foo@example.com bar@example.org ) ],
+                        subject       => 'Big error!',
+                        header_encode => 'MIME-Header-ISO_2022_JP',
+                        body_encode   => 'iso-2022-jp' ]
+                    ],
+              );
+      $log->emerg("Something bad is happening");
 
-Log::Dispatch::Email::EmailSender installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
+      ###
+      ### Sending a message with Email::Sender::Transport::SMTP
+      ### Does not support ssl option.
+      ###
+      use Log::Dispatch;
+      my $log =
+          Log::Dispatch->new
+              ( outputs =>
+                    [ [ 'Email::EmailSender',
+                        min_level     => 'emerg',
+                        from          => 'logger@example.com',
+                        to            => [ qw( foo@example.com bar@example.org ) ],
+                        subject       => 'Big error!',
+                        header_encode => 'MIME-Header-ISO_2022_JP',
+                        body_encode   => 'iso-2022-jp',
+                        use_transport => 1,
+                        host          => [your smtp host],
+                        port          => [your smtp port number] ]
+                    ],
+              );
+      $log->emerg("Something bad is happening");
 
-    % cpan Log::Dispatch::Email::EmailSender
+DESCRIPTION
+    This is a subclass of Log::Dispatch::Email that implements the
+    send_email method using the Email::Sender::Simple module.
 
-Download it, unpack it, then build it as per the usual:
+DESCRIPTION(ja)
+    デフォルトで日本語の件名と本文を ISO_2022_JP にエンコーディングしてくれます。 他のモジュールのように文字化けが起こりません。
 
-    % perl Makefile.PL
-    % make && make test
+DEPENDENCIES
+    Log::Dispatch::Email
+    Encode
+    Email::MIME
+    Email::Sender::Simple
+    Email::Sender::Transport::SMTP
 
-Then install it:
+BUGS AND LIMITATIONS
+    Does not support SSL on Email::Sender::Transport::SMTP.
 
-    % make install
+    I don't understand why it doesn't work.
 
-DOCUMENTATION
+AUTHOR
+    keroyonn <keroyonn@cpan.org>
 
-Log::Dispatch::Email::EmailSender documentation is available as in POD. So you can do:
+SEE ALSO
+    Log::Dispatch Log::Dispatch::Email::MailSender
 
-    % perldoc Log::Dispatch::Email::EmailSender
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 
-to read the documentation online with your favorite pager.
-
-keroyonn
