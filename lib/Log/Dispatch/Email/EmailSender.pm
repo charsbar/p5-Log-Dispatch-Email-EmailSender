@@ -12,7 +12,7 @@ use base 'Log::Dispatch::Email';
 
 use 5.008008;
 
-our $VERSION = '0.0.2';
+our $VERSION = '0.02';
 
 sub new {
     my $proto = shift;
@@ -20,12 +20,12 @@ sub new {
     my %p     = @_;
 
     my $self = $class->SUPER::new(%p);
-    $self->{use_transport} = delete $p{use_transport};
-    $self->{host}          = delete $p{host};
-    $self->{port}          = delete $p{port};
-    $self->{ssl}           = delete $p{ssl};
-    $self->{sasl_username} = delete $p{sasl_username};
-    $self->{sasl_password} = delete $p{sasl_password};
+    $self->{use_transport_smtp} = delete $p{use_transport_smtp};
+    $self->{host}               = delete $p{host};
+    $self->{port}               = delete $p{port};
+    $self->{ssl}                = delete $p{ssl};
+    $self->{sasl_username}      = delete $p{sasl_username};
+    $self->{sasl_password}      = delete $p{sasl_password};
 
     return $self;
 }
@@ -40,7 +40,8 @@ sub send_email {
         my $d_enc1 = 'MIME-Header-ISO_2022_JP';
         my $d_enc2 = 'iso-2022-jp';
         my $email  = _create_email(
-            {   from          => $self->{from},
+            {
+                from          => $self->{from},
                 to            => $to_str,
                 subject       => $self->{subject},
                 header_encode => $self->{header_encode} || $d_enc1,
@@ -50,7 +51,7 @@ sub send_email {
         );
 
         my $transport = {};
-        if ( $self->{use_transport} ) {
+        if ( $self->{use_transport_smtp} ) {
             $transport->{transport} = Email::Sender::Transport::SMTP->new(
                 host => $self->{host} || 'localhost',
                 port => $self->{port},
@@ -88,6 +89,7 @@ sub _create_email {
 1;
 
 __END__
+
 =encoding utf-8
 
 =head1 NAME
@@ -123,17 +125,17 @@ Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email that uses t
       Log::Dispatch->new
           ( outputs =>
                 [ [ 'Email::EmailSender',
-                    min_level     => 'emerg',
-                    from          => 'logger@example.com',
-                    to            => [ qw( foo@example.com bar@example.org ) ],
-                    subject       => 'Big error!',
-                    header_encode => 'MIME-Header-ISO_2022_JP',
-                    body_encode   => 'iso-2022-jp',
-                    use_transport => 1,
-                    host          => [your smtp host],
-                    port          => [your smtp port number],
-                    sasl_username => [your username],
-                    sasl_password => [your password], ],
+                    min_level          => 'emerg',
+                    from               => 'logger@example.com',
+                    to                 => [ qw( foo@example.com bar@example.org ) ],
+                    subject            => 'Big error!',
+                    header_encode      => 'MIME-Header-ISO_2022_JP',
+                    body_encode        => 'iso-2022-jp',
+                    use_transport_smtp => 1,
+                    host               => [your smtp host],
+                    port               => [your smtp port number],
+                    sasl_username      => [your username],
+                    sasl_password      => [your password], ],
                 ],
           );
   $log->emerg("Something bad is happening");
@@ -142,11 +144,13 @@ Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email that uses t
 
 This is a subclass of L<Log::Dispatch::Email> that implements the
 send_email method using the L<Email::Sender::Simple> module.
+The garble can be prevented by specifying the character encoding. 
 
 =head1 DESCRIPTION(ja)
 
-デフォルトで日本語の件名と本文を ISO_2022_JP にエンコーディングしてくれます。
-他のモジュールのように文字化けが起こりません。
+Log::Dispatch::Email のサブクラスです。
+エンコードを指定することで文字化けを防ぐことができます。
+また、デフォルトで日本語の件名と本文を ISO_2022_JP にエンコーディングするため、他のモジュールのような文字化けが起こりません。
 
 =head1 DEPENDENCIES
 
@@ -171,14 +175,29 @@ Does not support SSL on Email::Sender::Transport::SMTP.
 
 I don't understand why it doesn't work.
 
+=head1 FUTURE PLANS
+
+=over
+
+=item Support other Email::Sender::Transport::* classes.
+
+=item Add more tests.
+
+=back
+
 =head1 AUTHOR
 
 keroyon E<lt>keroyon@cpan.orgE<gt>
 
 =head1 SEE ALSO
 
-Log::Dispatch
-Log::Dispatch::Email::MailSender
+=over
+
+=item L<Log::Dispatch>
+
+=item L<Log::Dispatch::Email::MailSender>
+
+=back
 
 =head1 LICENSE
 
