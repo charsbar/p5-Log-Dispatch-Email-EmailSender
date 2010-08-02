@@ -30,27 +30,29 @@ SYNOPSIS
           Log::Dispatch->new
               ( outputs =>
                     [ [ 'Email::EmailSender',
-                        min_level     => 'emerg',
-                        from          => 'logger@example.com',
-                        to            => [ qw( foo@example.com bar@example.org ) ],
-                        subject       => 'Big error!',
-                        header_encode => 'MIME-Header-ISO_2022_JP',
-                        body_encode   => 'iso-2022-jp',
-                        use_transport => 1,
-                        host          => [your smtp host],
-                        port          => [your smtp port number],
-                        sasl_username => [your username],
-                        sasl_password => [your password], ],
+                        min_level          => 'emerg',
+                        from               => 'logger@example.com',
+                        to                 => [ qw( foo@example.com bar@example.org ) ],
+                        subject            => 'Big error!',
+                        header_encode      => 'MIME-Header-ISO_2022_JP',
+                        body_encode        => 'iso-2022-jp',
+                        use_transport_smtp => 1,
+                        host               => [your smtp host],
+                        port               => [your smtp port number],
+                        sasl_username      => [your username],
+                        sasl_password      => [your password], ],
                     ],
               );
       $log->emerg("Something bad is happening");
 
 DESCRIPTION
     This is a subclass of Log::Dispatch::Email that implements the
-    send_email method using the Email::Sender::Simple module.
+    send_email method using the Email::Sender::Simple module. The garble can
+    be prevented by specifying the character encoding.
 
 DESCRIPTION(ja)
-    デフォルトで日本語の件名と本文を ISO_2022_JP にエンコーディングしてくれます。 他のモジュールのように文字化けが起こりません。
+    Log::Dispatch::Email のサブクラスです。 エンコードを指定することで文字化けを防ぐことができます。
+    また、デフォルトで日本語の件名と本文を ISO_2022_JP にエンコーディングするため、他のモジュールのような文字化けが起こりません。
 
 DEPENDENCIES
     Log::Dispatch::Email
@@ -64,11 +66,16 @@ BUGS AND LIMITATIONS
 
     I don't understand why it doesn't work.
 
+FUTURE PLANS
+    Support other Email::Sender::Transport::* classes.
+    Add more tests.
+
 AUTHOR
     keroyon <keroyon@cpan.org>
 
 SEE ALSO
-    Log::Dispatch Log::Dispatch::Email::MailSender
+    Log::Dispatch
+    Log::Dispatch::Email::MailSender
 
 LICENSE
     This library is free software; you can redistribute it and/or modify it
