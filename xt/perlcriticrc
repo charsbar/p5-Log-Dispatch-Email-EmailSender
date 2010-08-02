@@ -1,4 +1,4 @@
-severity = 1
+severity = 5
 
 [Variables::ProhibitPackageVars]
 add_packages = YAML::Syck
