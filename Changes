@@ -1,5 +1,8 @@
 Revision history for Perl extension Log::Dispatch::Email::EmailSender
 
+0.0.2   Mon Aug  2 13:06:00 2010
+        - add suport for smtp authorization
+
 0.01_2  Mon Aug  2 09:30:28 2010
         - correct my email address
 
