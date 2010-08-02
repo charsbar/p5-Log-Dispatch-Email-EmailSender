@@ -171,7 +171,7 @@ I don't understand why it doesn't work.
 
 =head1 AUTHOR
 
-keroyonn E<lt>keroyonn@cpan.orgE<gt>
+keroyon E<lt>keroyon@cpan.orgE<gt>
 
 =head1 SEE ALSO
 

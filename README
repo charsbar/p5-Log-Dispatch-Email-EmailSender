@@ -63,7 +63,7 @@ BUGS AND LIMITATIONS
     I don't understand why it doesn't work.
 
 AUTHOR
-    keroyonn <keroyonn@cpan.org>
+    keroyon <keroyon@cpan.org>
 
 SEE ALSO
     Log::Dispatch Log::Dispatch::Email::MailSender
