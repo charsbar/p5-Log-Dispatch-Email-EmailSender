@@ -12,7 +12,7 @@ use base 'Log::Dispatch::Email';
 
 use 5.008008;
 
-our $VERSION = '0.01_2';
+our $VERSION = '0.02';
 
 sub new {
     my $proto = shift;
@@ -24,8 +24,8 @@ sub new {
     $self->{host}          = delete $p{host};
     $self->{port}          = delete $p{port};
     $self->{ssl}           = delete $p{ssl};
-    $self->{user}          = delete $p{user};
-    $self->{pass}          = delete $p{pass};
+    $self->{sasl_username} = delete $p{sasl_username};
+    $self->{sasl_password} = delete $p{sasl_password};
 
     return $self;
 }
@@ -109,7 +109,7 @@ Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email that uses t
                     to            => [ qw( foo@example.com bar@example.org ) ],
                     subject       => 'Big error!',
                     header_encode => 'MIME-Header-ISO_2022_JP',
-                    body_encode   => 'iso-2022-jp' ]
+                    body_encode   => 'iso-2022-jp', ],
                 ],
           );
   $log->emerg("Something bad is happening");
@@ -131,7 +131,9 @@ Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email that uses t
                     body_encode   => 'iso-2022-jp',
                     use_transport => 1,
                     host          => [your smtp host],
-                    port          => [your smtp port number] ]
+                    port          => [your smtp port number],
+                    sasl_username => [your username],
+                    sasl_password => [your password], ],
                 ],
           );
   $log->emerg("Something bad is happening");
