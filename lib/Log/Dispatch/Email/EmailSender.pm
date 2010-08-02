@@ -12,7 +12,7 @@ use base 'Log::Dispatch::Email';
 
 use 5.008008;
 
-our $VERSION = '0.02';
+our $VERSION = '0.0.2';
 
 sub new {
     my $proto = shift;
