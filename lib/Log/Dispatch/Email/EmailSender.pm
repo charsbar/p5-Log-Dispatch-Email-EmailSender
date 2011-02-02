@@ -70,18 +70,19 @@ sub _create_email {
     my $opt   = shift;
     my $enc1  = $opt->{header_encode};
     my $enc2  = $opt->{body_encode};
+    my $dec   = $opt->{decode} || 'utf8';
     my $email = Email::MIME->create(
         header => [
-            From    => encode( $enc1, $opt->{from} ),
-            To      => encode( $enc1, $opt->{to} ),
-            Subject => encode( $enc1, $opt->{subject} ),
+            From    => encode( $enc1, decode($dec, $opt->{from} ) ),
+            To      => encode( $enc1, decode($dec, $opt->{to} ) ),
+            Subject => encode( $enc1, decode($dec, $opt->{subject} ) ),
         ],
         attributes => {
             content_type => 'text/plain',
             charset      => $enc2,
             encoding     => '7bit',
         },
-        body => encode( $enc2, $opt->{body} ),
+        body => encode( $enc2, decode($dec, $opt->{body} ) ),
     );
     return $email;
 }
@@ -112,6 +113,7 @@ Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email that uses t
                     subject       => 'Big error!',
                     header_encode => 'MIME-Header-ISO_2022_JP',
                     body_encode   => 'iso-2022-jp', ],
+                    decode        => 'utf8',
                 ],
           );
   $log->emerg("Something bad is happening");
@@ -131,6 +133,7 @@ Log::Dispatch::Email::EmailSender - Subclass of Log::Dispatch::Email that uses t
                     subject            => 'Big error!',
                     header_encode      => 'MIME-Header-ISO_2022_JP',
                     body_encode        => 'iso-2022-jp',
+                    decode             => 'utf8',
                     use_transport_smtp => 1,
                     host               => [your smtp host],
                     port               => [your smtp port number],
