@@ -26,6 +26,7 @@ sub new {
     $self->{ssl}                = delete $p{ssl};
     $self->{sasl_username}      = delete $p{sasl_username};
     $self->{sasl_password}      = delete $p{sasl_password};
+    $self->{decode}             = delete $p{decode};
 
     return $self;
 }
@@ -46,6 +47,7 @@ sub send_email {
                 subject       => $self->{subject},
                 header_encode => $self->{header_encode} || $d_enc1,
                 body_encode   => $self->{body_encode} || $d_enc2,
+                decode        => $self->{decode},
                 body          => $p{message},
             }
         );
