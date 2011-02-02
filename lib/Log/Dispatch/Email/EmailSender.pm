@@ -2,7 +2,7 @@ package Log::Dispatch::Email::EmailSender;
 
 use warnings;
 use strict;
-use Encode qw(encode);
+use Encode qw(encode decode);
 use Email::MIME;
 use Email::Sender::Simple qw(sendmail);
 use Email::Sender::Transport::SMTP;
