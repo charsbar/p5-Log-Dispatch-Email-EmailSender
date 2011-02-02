@@ -70,21 +70,26 @@ sub _create_email {
     my $opt   = shift;
     my $enc1  = $opt->{header_encode};
     my $enc2  = $opt->{body_encode};
-    my $dec   = $opt->{decode} || 'utf8';
+    my $dec   = $opt->{decode};
     my $email = Email::MIME->create(
         header => [
-            From    => encode( $enc1, decode($dec, $opt->{from} ) ),
-            To      => encode( $enc1, decode($dec, $opt->{to} ) ),
-            Subject => encode( $enc1, decode($dec, $opt->{subject} ) ),
+            From    => encode( $enc1, _decode($dec, $opt->{from} ) ),
+            To      => encode( $enc1, _decode($dec, $opt->{to} ) ),
+            Subject => encode( $enc1, _decode($dec, $opt->{subject} ) ),
         ],
         attributes => {
             content_type => 'text/plain',
             charset      => $enc2,
             encoding     => '7bit',
         },
-        body => encode( $enc2, decode($dec, $opt->{body} ) ),
+        body => encode( $enc2, _decode($dec, $opt->{body} ) ),
     );
     return $email;
+}
+
+sub _decode {  # for backward compatibility
+    my ($dec, $str) = @_;
+    $dec ? decode($dec, $str) : $str;
 }
 
 1;
